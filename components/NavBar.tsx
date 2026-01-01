@@ -48,7 +48,10 @@ export default async function NavBar() {
                     </DropdownMenuContent>
                   </DropdownMenu>
                 ) : (
-                  <NavigationMenuLink href={`/category/${category.slug}`}>
+                  <NavigationMenuLink
+                    href={`/category/${category.slug}`}
+                    className="font-semibold"
+                  >
                     {category.name}
                   </NavigationMenuLink>
                 )}
@@ -70,7 +73,12 @@ function CategoryDropdownItem({ category }: { category: CategoryTree }) {
     return (
       <DropdownMenuSub>
         <DropdownMenuSubTrigger className="cursor-pointer">
-          <span>{category.name}</span>
+          <Link
+            href={`/category/${category.slug}`}
+            className="cursor-pointer w-full"
+          >
+            {category.name}
+          </Link>
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
           <DropdownMenuSubContent>
