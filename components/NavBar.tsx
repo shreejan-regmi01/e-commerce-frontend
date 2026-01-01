@@ -1,91 +1,97 @@
 import {
   NavigationMenu,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { getCategories } from "@/services/category.service";
+import { buildCategoryTree } from "@/lib/buildCategoryTree";
+import { CategoryTree } from "@/types/category";
+import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
-export default function NavBar() {
+export default async function NavBar() {
+  const categories = await getCategories();
+  const categoryTree = buildCategoryTree(categories);
+
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          {/* <NavigationMenuTrigger>Item One</NavigationMenuTrigger> */}
-          {/* <NavigationMenuContent> */}
-          {/* <NavigationMenuLink>Link</NavigationMenuLink> */}
-          {/* </NavigationMenuContent> */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <NavigationMenuTrigger className="focus-visible:ring-0 focus-visible:outline-0">
-                Open
-              </NavigationMenuTrigger>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  Profile
-                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Billing
-                  <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Settings
-                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  Keyboard shortcuts
-                  <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuItem>Email</DropdownMenuItem>
-                      <DropdownMenuItem>Message</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>More...</DropdownMenuItem>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-                <DropdownMenuItem>
-                  New Team
-                  <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>GitHub</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuItem disabled>API</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                Log out
-                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <>
+      <NavigationMenu className="px-12 pb-0.5">
+        <NavigationMenuList>
+          {categoryTree.map((category) => {
+            const hasChildren =
+              category.children && category.children.length > 0;
+            return (
+              <NavigationMenuItem key={category.id}>
+                {hasChildren ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <NavigationMenuTrigger className="focus-visible:ring-0 focus-visible:outline-0">
+                        {category.name}
+                      </NavigationMenuTrigger>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      {category.children.map((child) => (
+                        <CategoryDropdownItem key={child.id} category={child} />
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <NavigationMenuLink href={`/category/${category.slug}`}>
+                    {category.name}
+                  </NavigationMenuLink>
+                )}
+              </NavigationMenuItem>
+            );
+          })}
+        </NavigationMenuList>
+      </NavigationMenu>
+      <Separator />
+    </>
+  );
+}
+
+function CategoryDropdownItem({ category }: { category: CategoryTree }) {
+  const hasChildren = category.children && category.children.length > 0;
+
+  // render a menu item with cursor along with sub-menu if the selected category has children
+  if (hasChildren) {
+    return (
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger className="cursor-pointer">
+          <span>{category.name}</span>
+        </DropdownMenuSubTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuSubContent>
+            {category.children.map((child) => (
+              <CategoryDropdownItem key={child.id} category={child} />
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuPortal>
+      </DropdownMenuSub>
+    );
+  }
+
+  // render standalone link as a base case
+  return (
+    <DropdownMenuItem asChild>
+      <Link
+        href={`/category/${category.slug}`}
+        className="cursor-pointer w-full"
+      >
+        {category.name}
+      </Link>
+    </DropdownMenuItem>
   );
 }
