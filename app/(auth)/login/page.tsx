@@ -19,15 +19,24 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useActionState } from "react";
 import { login } from "./action";
+import { Alert, AlertTitle } from "@/components/ui/alert";
+import { AlertCircleIcon } from "lucide-react";
 
 export default function LoginPage({ className }: React.ComponentProps<"div">) {
   const [state, loginAction, isPending] = useActionState(login, undefined);
-  console.log({ state });
+  console.log(state);
   const emailError = state?.errors?.email?.[0];
   const passwordError = state?.errors?.password?.[0];
+  console.log("toast");
   return (
     <div className="w-screen h-screen grid place-items-center">
       <div className={cn("flex flex-col gap-6 w-[500px]", className)}>
+        {state?.message && (
+          <Alert variant={"destructive"}>
+            <AlertCircleIcon />
+            <AlertTitle>{state?.message}</AlertTitle>
+          </Alert>
+        )}
         <Card>
           <CardHeader>
             <CardTitle>Login to your account</CardTitle>

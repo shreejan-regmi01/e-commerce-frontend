@@ -16,7 +16,6 @@ export async function login(
   formData: FormData
 ) {
   const result = loginSchema.safeParse(Object.fromEntries(formData));
-  console.log({ result });
   if (!result.success) {
     return {
       errors: result.error.flatten().fieldErrors,
@@ -33,9 +32,10 @@ export async function login(
   });
 
   if (!res.ok) {
-    return { error: "Login failed" };
+    const errorResponse = await res.json();
+    console.log({ errorResponse });
+    return { ...errorResponse };
   }
-
   const data = await res.json();
 
   // store auth token in cookie
