@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,8 +16,11 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { useActionState } from "react";
+import { login } from "./action";
 
 export default function LoginPage({ className }: React.ComponentProps<"div">) {
+  const [state, loginAction] = useActionState(login, undefined);
   return (
     <div className="w-screen h-screen grid place-items-center">
       <div className={cn("flex flex-col gap-6 w-[500px]", className)}>
@@ -28,7 +32,7 @@ export default function LoginPage({ className }: React.ComponentProps<"div">) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form action={loginAction}>
               <FieldGroup>
                 <Field>
                   <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -36,6 +40,7 @@ export default function LoginPage({ className }: React.ComponentProps<"div">) {
                     id="email"
                     type="email"
                     placeholder="m@example.com"
+                    name="email"
                     required
                   />
                 </Field>
@@ -49,7 +54,12 @@ export default function LoginPage({ className }: React.ComponentProps<"div">) {
                       Forgot your password?
                     </a> */}
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    name="password"
+                    required
+                  />
                 </Field>
                 <Field>
                   <Button type="submit">Login</Button>
