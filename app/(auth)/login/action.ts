@@ -4,13 +4,26 @@
 import { parseCookieString } from "@/lib/parseCookieString";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.email({ message: "Invalid email address" }).trim(),
+  password: z.string().trim(),
+});
 
 export async function login(
   prevState: { error?: string } | undefined,
   formData: FormData
 ) {
-  const email = formData.get("email");
-  const password = formData.get("password");
+  const result = loginSchema.safeParse(Object.fromEntries(formData));
+  console.log({ result });
+  if (!result.success) {
+    return {
+      errors: result.error.flatten().fieldErrors,
+    };
+  }
+
+  const { email, password } = result.data;
 
   //login api
   const res = await fetch(`${process.env.API_BASE_URL}/user/sign-in`, {
@@ -39,7 +52,6 @@ export async function login(
     setCookieHeader.forEach((cookieString) => {
       const parsed = parseCookieString(cookieString);
 
-      console.log({ parsed });
       // set to browser (through next js)
       if (parsed.name && parsed.value) {
         cookiesStore.set({
