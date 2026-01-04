@@ -1,3 +1,6 @@
+import { Category } from "./category";
+import { User } from "./user";
+
 export type Product = {
   id: number;
   name: string;
@@ -8,8 +11,22 @@ export type Product = {
   addedBy: number;
   createdAt: string;
   updatedAt: string;
-  productSkus: ProductSku[];
+  productSkus?: ProductSku[];
+  user?: User;
+  categories?: Category[];
+  productOptions?: ProductOptions[];
 };
+
+export interface ProductOptions {
+  id: number;
+  name: string;
+  productOptionValues: ProductOptionValue[];
+}
+
+export interface ProductOptionValue {
+  id: number;
+  value: string;
+}
 
 export type ProductSku = {
   id: number;

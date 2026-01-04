@@ -22,6 +22,7 @@ export default async function CategoryProductsPage({
           <ProductListItem
             key={product.id}
             id={product.id}
+            slug={product.slug}
             name={product.name}
             brand={product.brand}
             price={product.productSkus[0]?.price || "--"}
