@@ -1,7 +1,15 @@
 # TODO
 
+- [ ] make product list items smaller
 - [ ] register user function
 - [ ] logged in route
+- [ ] fetching categories has been cached, invalidate cache when adding / updating products
+      export async function addCategory(formData: FormData) {
+      // ... call express api ...
+      // This refreshes the Navbar for everyone immediately
+      revalidateTag('categories')
+      }
+- [ ] Add indexes to product_categories(category_id)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
