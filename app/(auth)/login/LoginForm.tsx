@@ -69,7 +69,11 @@ export const LoginForm = () => {
                 {passwordError && <FieldError>{passwordError}</FieldError>}
               </Field>
               <Field>
-                <Button type="submit" disabled={isPending}>
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="cursor-pointer"
+                >
                   {isPending ? "Logging in..." : "Login"}
                 </Button>
                 <FieldDescription className="text-center">
