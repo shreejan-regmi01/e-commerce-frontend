@@ -4,23 +4,52 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Product } from "@/types/product";
+import { Product, ProductSku } from "@/types/product";
 import { CreditCard, ShoppingCart, Store } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ProductDetails({ product }: { product: Product }) {
   const { productOptions } = product;
+  let { productSkus } = product;
   const [selections, setSelections] = useState<Record<number, number>>({});
+  const [selectedSku, setSelectedSku] = useState<ProductSku | null>(null);
 
+  const selectedOptionValues = Object.values(selections).sort();
+
+  productSkus = productSkus?.map((skuData) => ({
+    ...skuData,
+    skuOptionValuesArray: skuData.skuOptionValues
+      .map((optionValue) => optionValue.id)
+      .sort(),
+  }));
   const handleSelection = (optionId: number, valueId: string) => {
-    if (valueId) {
-      setSelections((prev) => ({ ...prev, [optionId]: parseInt(valueId) }));
-    }
+    if (!valueId) return;
+    setSelections((prev) => ({ ...prev, [optionId]: parseInt(valueId) }));
   };
+
+  useEffect(() => {
+    // Find matching SKU based on current selections
+    const matchingSku = productSkus?.find((sku) => {
+      console.log("Checking SKU:", sku.skuOptionValuesArray.toString());
+      console.log("Expected:", selectedOptionValues.toString());
+      const match =
+        sku.skuOptionValuesArray.toString() === selectedOptionValues.toString();
+      console.log("Match:", match);
+      return match;
+    });
+
+    setSelectedSku(matchingSku || null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selections]);
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-4 p-2 bg-gray-100 rounded">
         {JSON.stringify(selections)}
+        <br />
+        {JSON.stringify(selectedOptionValues)}
+        <br />
+        {JSON.stringify(selectedSku)}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* product image gallery */}

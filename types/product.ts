@@ -11,7 +11,10 @@ export type Product = {
   addedBy: number;
   createdAt: string;
   updatedAt: string;
-  productSkus?: ProductSku[];
+  productSkus?: (ProductSku & {
+    skuOptionValues: ProductOptionValue[];
+    skuOptionValuesArray: number[];
+  })[];
   user?: User;
   categories?: Category[];
   productOptions?: ProductOptions[];
@@ -25,6 +28,7 @@ export interface ProductOptions {
 
 export interface ProductOptionValue {
   id: number;
+  optionId: number;
   value: string;
 }
 
@@ -37,4 +41,9 @@ export type ProductSku = {
   quantity: number;
   createdAt: string;
   updatedAt: string;
+};
+
+export type SkuOptionValue = {
+  skuId: number;
+  optionValueId: number;
 };
