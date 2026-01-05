@@ -13,8 +13,11 @@ export default function ProductDetails({ product }: { product: Product }) {
   let { productSkus } = product;
   const [selections, setSelections] = useState<Record<number, number>>({});
   const [selectedSku, setSelectedSku] = useState<ProductSku | null>(null);
+  const [ctasDisabledMsg, setCtasDisabledMsg] = useState<string>("");
 
   const selectedOptionValues = Object.values(selections).sort();
+  const isAllOptionsSelected =
+    Object.entries(selections).length === productOptions?.length;
 
   productSkus = productSkus?.map((skuData) => ({
     ...skuData,
@@ -28,19 +31,32 @@ export default function ProductDetails({ product }: { product: Product }) {
   };
 
   useEffect(() => {
-    // Find matching SKU based on current selections
+    // find matching sku based on current selection
     const matchingSku = productSkus?.find((sku) => {
-      console.log("Checking SKU:", sku.skuOptionValuesArray.toString());
-      console.log("Expected:", selectedOptionValues.toString());
-      const match =
-        sku.skuOptionValuesArray.toString() === selectedOptionValues.toString();
-      console.log("Match:", match);
-      return match;
+      return (
+        sku.skuOptionValuesArray.toString() === selectedOptionValues.toString()
+      );
     });
 
     setSelectedSku(matchingSku || null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selections]);
+
+  useEffect(() => {
+    if (!isAllOptionsSelected) return;
+    if (!selectedSku) {
+      return setCtasDisabledMsg(
+        "Selected variant not available. Please select another variant."
+      );
+    }
+    setCtasDisabledMsg("");
+  }, [selectedSku, isAllOptionsSelected]);
+
+  const isBuyAndCartButtonDisabled = () => {
+    if (!isAllOptionsSelected) return true;
+    if (!selectedSku) return true;
+    return false;
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -68,7 +84,7 @@ export default function ProductDetails({ product }: { product: Product }) {
 
         {/* product details */}
         <div className="flex flex-col gap-6 col-span-2 pl-12 pr-24">
-          {/* Header Info */}
+          {/* header info */}
           <div>
             <Badge variant="secondary" className="mb-2 text-xs">
               {product.brand}
@@ -81,9 +97,8 @@ export default function ProductDetails({ product }: { product: Product }) {
               </span>
             </div>
           </div>
-          {/* Description */}
+          {/* description */}
           <div>
-            {/* <h3 className="font-semibold text-gray-900 mb-2">Description</h3> */}
             <p className="text-gray-600 text-sm leading-relaxed">
               {product.description}
             </p>
@@ -91,7 +106,7 @@ export default function ProductDetails({ product }: { product: Product }) {
 
           <Separator />
 
-          {/* Variant Selection Groups (The part from your image) */}
+          {/* variant selection groups */}
           <h2 className="text-lg font-bold">Choose variants:</h2>
           <div className="space-y-6">
             {productOptions &&
@@ -99,12 +114,6 @@ export default function ProductDetails({ product }: { product: Product }) {
                 <div key={option.id}>
                   <h3 className="text-sm font-medium text-gray-700 mb-3">
                     {option.name}:{" "}
-                    {/* <span className="text-gray-900 font-bold ml-1"> */}
-                    {/* Find the selected value name to display next to the label */}
-                    {/* {option.productOptionValues.find(
-                      (v) => v.id === selections[option.id]
-                    )?.value || "Select"}
-                  </span> */}
                   </h3>
 
                   <ToggleGroup
@@ -123,7 +132,6 @@ export default function ProductDetails({ product }: { product: Product }) {
               hover:bg-gray-50 hover:border-gray-300
             `}
                       >
-                        {/* Optional: Add a colored dot if the option name is 'Color' */}
                         {option.name === "Color" && (
                           <span
                             className="inline-block w-3 h-3 rounded-full mr-2 border border-gray-200"
@@ -142,15 +150,21 @@ export default function ProductDetails({ product }: { product: Product }) {
                   </ToggleGroup>
                 </div>
               ))}
+            {!isAllOptionsSelected && (
+              <p className="text-red-500">
+                Please select required variants from each option to place order
+              </p>
+            )}
           </div>
 
           <Separator />
 
-          {/* Action Buttons */}
+          {/* action buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               className="flex-1 h-12 text-md cursor-pointer bg-blue-600 hover:bg-blue-700"
               size="lg"
+              disabled={isBuyAndCartButtonDisabled()}
             >
               <CreditCard className="mr-2 h-5 w-5" /> Buy Now
             </Button>
@@ -158,17 +172,20 @@ export default function ProductDetails({ product }: { product: Product }) {
               variant="outline"
               className="flex-1 h-12 text-md cursor-pointer"
               size="lg"
+              disabled={isBuyAndCartButtonDisabled()}
             >
               <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
             </Button>
           </div>
+          {ctasDisabledMsg && (
+            <p className="text-red-500 -mt-4">{ctasDisabledMsg}</p>
+          )}
 
-          {/* Shop Info Card */}
+          {/* shop info card */}
           <Card className="bg-gray-50 border-none mt-4">
             <CardContent className="px-4 flex items-center gap-4">
               <div className="relative w-12 h-12 rounded-full overflow-hidden border bg-white">
                 <Store className="w-6 h-6 m-auto mt-3 text-gray-400" />
-                {/* Use Image component here for real shop icon */}
               </div>
               <div className="flex-1">
                 <p className="text-xs text-gray-500">Sold by</p>
