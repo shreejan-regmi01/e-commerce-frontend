@@ -8,7 +8,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ChevronDown, LogOut, ShoppingBag, User } from "lucide-react";
+import {
+  ChevronDown,
+  LogOut,
+  ShoppingBag,
+  ShoppingCart,
+  User,
+} from "lucide-react";
 import { getOwnUserData } from "@/services/user.service";
 
 export async function UserNav() {
@@ -16,7 +22,7 @@ export async function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="rounded-full">
+        <Button variant="ghost" className="rounded-full cursor-pointer">
           <User className="h-4 w-4" />
           <p>{user.firstName}</p>
           <ChevronDown className="mt-1" />
@@ -40,6 +46,12 @@ export async function UserNav() {
           </DropdownMenuItem>
         </Link>
 
+        <Link href="/cart">
+          <DropdownMenuItem className="cursor-pointer">
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            <span>My Cart</span>
+          </DropdownMenuItem>
+        </Link>
         <Link href="/orders">
           <DropdownMenuItem className="cursor-pointer">
             <ShoppingBag className="mr-2 h-4 w-4" />
