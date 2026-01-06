@@ -25,7 +25,7 @@ export default async function CategoryProductsPage({
             slug={product.slug}
             name={product.name}
             brand={product.brand}
-            price={product.productSkus[0]?.price || "--"}
+            price={product.productSkus?.[0]?.price || "--"}
             // imageUrl={product.imageUrl}
           />
         ))}

@@ -5,7 +5,7 @@ export async function getOwnUserData(): Promise<User> {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   if (!accessToken) {
-    throw new Error("No access token found");
+    throw new Error("User is not logged in!");
   }
   return fetcher(`/user/me`, {
     method: "GET",

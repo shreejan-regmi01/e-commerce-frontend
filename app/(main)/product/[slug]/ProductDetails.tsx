@@ -6,7 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Product, ProductSku } from "@/types/product";
 import { CreditCard, ShoppingCart, Store } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
+import { addToCart } from "./action";
 
 export default function ProductDetails({ product }: { product: Product }) {
   const { productOptions } = product;
@@ -14,6 +15,7 @@ export default function ProductDetails({ product }: { product: Product }) {
   const [selections, setSelections] = useState<Record<number, number>>({});
   const [selectedSku, setSelectedSku] = useState<ProductSku | null>(null);
   const [ctasDisabledMsg, setCtasDisabledMsg] = useState<string>("");
+  const [isCartAdditionPending, startTransition] = useTransition();
 
   const selectedOptionValues = Object.values(selections).sort();
   const isAllOptionsSelected =
@@ -53,10 +55,28 @@ export default function ProductDetails({ product }: { product: Product }) {
   }, [selectedSku, isAllOptionsSelected]);
 
   const isBuyAndCartButtonDisabled = () => {
-    if (!isAllOptionsSelected) return true;
-    if (!selectedSku) return true;
-    return false;
+    return isCartAdditionPending || !isAllOptionsSelected || !selectedSku;
+    // if (isCartAdditionPending) return true;
+    // if (!isAllOptionsSelected) return true;
+    // if (!selectedSku) return true;
+    // return false;
   };
+
+  async function addToCartHandler({
+    skuId,
+    quantity,
+    pathname,
+  }: {
+    skuId: number | undefined;
+    quantity: number;
+    pathname: string;
+  }) {
+    if (!skuId) return;
+    console.log({ pathname });
+    startTransition(async () => {
+      await addToCart({ skuId, quantity, pathname });
+    });
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -172,8 +192,16 @@ export default function ProductDetails({ product }: { product: Product }) {
               className="flex-1 h-12 text-md cursor-pointer"
               size="lg"
               disabled={isBuyAndCartButtonDisabled()}
+              onClick={() =>
+                addToCartHandler({
+                  skuId: selectedSku?.id,
+                  quantity: 1,
+                  pathname: window.location.pathname,
+                })
+              }
             >
-              <ShoppingCart className="mr-2 h-5 w-5" /> Add to Cart
+              <ShoppingCart className="mr-2 h-5 w-5" />{" "}
+              {isCartAdditionPending ? "Adding to Cart..." : "Add to Cart"}
             </Button>
           </div>
           {ctasDisabledMsg && (

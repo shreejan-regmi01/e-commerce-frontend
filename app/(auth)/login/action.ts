@@ -33,7 +33,6 @@ export async function login(
 
   if (!res.ok) {
     const errorResponse = await res.json();
-    console.log({ errorResponse });
     return { ...errorResponse };
   }
   const data = await res.json();
