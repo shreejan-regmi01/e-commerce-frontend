@@ -40,10 +40,9 @@ export async function addToCart({
   });
 
   const response = await res.json();
-  console.log({ response });
   if (!res.ok) {
     return response;
   }
-  // also show a toast once item is added to cart
   revalidatePath(pathname);
+  return response;
 }

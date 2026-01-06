@@ -74,9 +74,12 @@ export default function ProductDetails({ product }: { product: Product }) {
     pathname: string;
   }) {
     if (!skuId) return;
-    console.log({ pathname });
     startTransition(async () => {
-      await addToCart({ skuId, quantity, pathname });
+      const res = await addToCart({ skuId, quantity, pathname });
+      if (res.message) {
+        toast.error(res.message);
+        return;
+      }
       setSelections({});
       setSelectedSku(null);
       setQuantity(1);
@@ -86,7 +89,7 @@ export default function ProductDetails({ product }: { product: Product }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-4 p-2 bg-gray-100 rounded">
+      {/* <div className="mb-4 p-2 bg-gray-100 rounded">
         {JSON.stringify(selections)}
         <br />
         {JSON.stringify(selectedOptionValues)}
@@ -94,7 +97,7 @@ export default function ProductDetails({ product }: { product: Product }) {
         {JSON.stringify(selectedSku)}
         <br />
         Quantity: {quantity}
-      </div>
+      </div> */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* product image gallery */}
         <div className="flex flex-col gap-4 col-span-1">
