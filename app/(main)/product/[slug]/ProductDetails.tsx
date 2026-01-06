@@ -8,6 +8,8 @@ import { Product, ProductSku } from "@/types/product";
 import { CreditCard, ShoppingCart, Store } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { addToCart } from "./action";
+import { NumericStepper } from "@/components/ui/numeric-stepper";
+import { toast } from "sonner";
 
 export default function ProductDetails({ product }: { product: Product }) {
   const { productOptions } = product;
@@ -16,6 +18,7 @@ export default function ProductDetails({ product }: { product: Product }) {
   const [selectedSku, setSelectedSku] = useState<ProductSku | null>(null);
   const [ctasDisabledMsg, setCtasDisabledMsg] = useState<string>("");
   const [isCartAdditionPending, startTransition] = useTransition();
+  const [quantity, setQuantity] = useState<number>(1);
 
   const selectedOptionValues = Object.values(selections).sort();
   const isAllOptionsSelected =
@@ -64,7 +67,6 @@ export default function ProductDetails({ product }: { product: Product }) {
 
   async function addToCartHandler({
     skuId,
-    quantity,
     pathname,
   }: {
     skuId: number | undefined;
@@ -75,18 +77,24 @@ export default function ProductDetails({ product }: { product: Product }) {
     console.log({ pathname });
     startTransition(async () => {
       await addToCart({ skuId, quantity, pathname });
+      setSelections({});
+      setSelectedSku(null);
+      setQuantity(1);
+      toast.success("Item added to cart successfully!");
     });
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* <div className="mb-4 p-2 bg-gray-100 rounded">
+      <div className="mb-4 p-2 bg-gray-100 rounded">
         {JSON.stringify(selections)}
         <br />
         {JSON.stringify(selectedOptionValues)}
         <br />
         {JSON.stringify(selectedSku)}
-      </div> */}
+        <br />
+        Quantity: {quantity}
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* product image gallery */}
         <div className="flex flex-col gap-4 col-span-1">
@@ -137,7 +145,7 @@ export default function ProductDetails({ product }: { product: Product }) {
 
                   <ToggleGroup
                     type="single"
-                    value={selections[option.id]?.toString()}
+                    value={selections[option.id]?.toString() || ""}
                     onValueChange={(val) => handleSelection(option.id, val)}
                     className="justify-start flex-wrap gap-3"
                   >
@@ -174,6 +182,12 @@ export default function ProductDetails({ product }: { product: Product }) {
                 Please select required variants from each option to place order
               </p>
             )}
+          </div>
+
+          {/* quantity selector */}
+          <div className="flex gap-4 items-center">
+            <p>Quantity:</p>
+            <NumericStepper value={quantity} onChange={setQuantity} min={1} />
           </div>
 
           <Separator />
