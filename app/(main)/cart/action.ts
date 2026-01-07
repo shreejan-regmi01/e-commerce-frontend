@@ -26,8 +26,6 @@ export async function updateCartItemQuantity({
     }
   );
 
-  console.log({ res });
-
   const response = await res.json();
   if (!res.ok) {
     return response;
