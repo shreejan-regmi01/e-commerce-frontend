@@ -6,7 +6,7 @@ const authRoutes = ["/login", "/register"];
 
 export async function middleware(request: NextRequest) {
   // get the token from cookies
-  console.log(request);
+  // console.log(request);
   const token = request.cookies.get("accessToken")?.value;
 
   // check where the user is trying to go
