@@ -6,39 +6,35 @@ import { NumericStepper } from "@/components/ui/numeric-stepper";
 import { CartItem } from "@/types/cart";
 import { ImageIcon, Loader2, Store, Trash2 } from "lucide-react";
 import { useState, useTransition } from "react";
-import { updateCartItemQuantity } from "./action";
+import { removeCartItem, updateCartItemQuantity } from "./action";
 import { toast } from "sonner";
 
-export function CartItemRow({
-  item,
-  onRemove,
-}: {
-  item: CartItem;
-  onRemove: (id: number) => void;
-}) {
+export function CartItemRow({ item }: { item: CartItem }) {
   const [quantity, setQuantity] = useState(item.quantity);
-  const [isPending, startTransition] = useTransition();
+  const [isPendingUpdate, startTransitionUpdate] = useTransition();
+  const [isPendingRemove, startTransitionRemove] = useTransition();
 
   const isDirty = quantity !== item.quantity;
 
   const handleUpdate = () => {
-    startTransition(async () => {
+    startTransitionUpdate(async () => {
       await updateCartItemQuantity({ skuId: item.sku.id, quantity });
-      // item.quantity = quantity; // Optimistic update for demo
       toast.success("Quantity updated");
     });
   };
 
   const handleRemove = () => {
-    // await removeCartItem(item.id);
-    // onRemove(item.id);
+    startTransitionRemove(async () => {
+      await removeCartItem({ skuId: item.sku.id });
+      toast.success("Item removed from cart");
+    });
   };
 
   return (
     <Card className="overflow-hidden">
       <CardContent className="p-4">
         <div className="flex gap-4">
-          {/* Image with Fallback */}
+          {/* image with fallback */}
           <div className="relative h-24 w-24 shrink-0 bg-gray-100 rounded-md border overflow-hidden">
             {/* {item.sku.product.mainImage ? (
               <Image
@@ -46,10 +42,6 @@ export function CartItemRow({
                 alt={item.product.name}
                 fill
                 className="object-cover"
-                onError={(e) => {
-                  // Next/Image handles errors gracefully usually, but for custom fallback:
-                  e.currentTarget.style.display = "none";
-                }}
               />
             ) : ( */}
             <div className="flex h-full w-full items-center justify-center text-gray-400">
@@ -58,7 +50,7 @@ export function CartItemRow({
             {/* )} */}
           </div>
 
-          {/* Details */}
+          {/* details */}
           <div className="flex-1 flex flex-col justify-between">
             <div>
               <div className="flex justify-between items-start">
@@ -75,18 +67,23 @@ export function CartItemRow({
                     </span>
                   </div>
                 </div>
-                {/* Remove Button */}
+                {/* remove button */}
                 <Button
                   onClick={handleRemove}
                   className="cursor-pointer text-gray-400 hover:text-red-500 transition-colors p-1"
                   aria-label="Remove item"
                   variant="ghost"
+                  disabled={isPendingRemove}
                 >
-                  <Trash2 className="h-5 w-5" />
+                  {isPendingRemove ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-5 w-5" />
+                  )}
                 </Button>
               </div>
 
-              {/* Variants */}
+              {/* variants */}
               <div className="mt-2 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
                 {item.sku.skuOptionValues.map((obj) => {
                   const optionName = obj.productOption.name;
@@ -111,7 +108,7 @@ export function CartItemRow({
             </div>
 
             <div className="flex items-end justify-between mt-4">
-              {/* Quantity Controls */}
+              {/* quantity */}
               <div className="flex items-center gap-3">
                 <div className="w-32">
                   <NumericStepper
@@ -122,16 +119,15 @@ export function CartItemRow({
                   />
                 </div>
 
-                {/* Update Button - Only shows when quantity changed */}
                 {isDirty && (
                   <Button
                     size="sm"
                     variant="outline"
                     onClick={handleUpdate}
-                    disabled={isPending}
+                    disabled={isPendingUpdate}
                     className="h-8 text-xs border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 hover:text-blue-800"
                   >
-                    {isPending ? (
+                    {isPendingUpdate ? (
                       <Loader2 className="h-3 w-3 animate-spin" />
                     ) : (
                       "Update"
@@ -140,7 +136,7 @@ export function CartItemRow({
                 )}
               </div>
 
-              {/* Price */}
+              {/* price */}
               <div className="text-right">
                 <p className="font-bold text-lg">
                   Rs. {(parseInt(item.sku.price) * quantity).toLocaleString()}

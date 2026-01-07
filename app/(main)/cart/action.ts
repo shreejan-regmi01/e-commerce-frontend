@@ -35,3 +35,21 @@ export async function updateCartItemQuantity({
   revalidatePath("/cart");
   return response;
 }
+export async function removeCartItem({ skuId }: { skuId: number }) {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  if (!accessToken) {
+    throw new Error("User is not logged in!");
+  }
+  const res = await fetch(`${process.env.API_BASE_URL}/cart/item/${skuId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: accessToken,
+    },
+  });
+
+  if (!res.ok) {
+    return res;
+  }
+  revalidatePath("/cart");
+}
