@@ -15,6 +15,7 @@ export async function login(
   prevState: { error?: string } | undefined,
   formData: FormData
 ) {
+  const returnUrl = (formData.get("returnUrl") as string) || "/";
   const result = loginSchema.safeParse(Object.fromEntries(formData));
   if (!result.success) {
     return {
@@ -67,5 +68,6 @@ export async function login(
   }
 
   // redirect to homepage
-  redirect("/");
+  const destination = returnUrl.startsWith("/") ? returnUrl : "/";
+  redirect(destination);
 }

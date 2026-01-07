@@ -22,7 +22,7 @@ import { AlertCircleIcon } from "lucide-react";
 import { useActionState } from "react";
 import { login } from "./action";
 
-export const LoginForm = () => {
+export const LoginForm = ({ returnUrl }: { returnUrl?: string }) => {
   const [state, loginAction, isPending] = useActionState(login, undefined);
   const emailError = state?.errors?.email?.[0];
   const passwordError = state?.errors?.password?.[0];
@@ -43,6 +43,7 @@ export const LoginForm = () => {
         </CardHeader>
         <CardContent>
           <form action={loginAction}>
+            <input type="hidden" name="returnUrl" value={returnUrl || "/"} />
             <FieldGroup>
               <Field data-invalid={!!emailError}>
                 <FieldLabel htmlFor="email">Email</FieldLabel>

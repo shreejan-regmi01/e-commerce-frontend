@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const protectedRoutes = ["/cart"];
+const protectedRoutes = ["/cart", "/profile"];
 const authRoutes = ["/login", "/register"];
 
 export async function middleware(request: NextRequest) {
   // get the token from cookies
+  console.log(request);
   const token = request.cookies.get("accessToken")?.value;
 
   // check where the user is trying to go
@@ -18,7 +19,10 @@ export async function middleware(request: NextRequest) {
 
   // user tries to access protected route without valid token
   if (isProtectedRoute && !token) {
-    const loginUrl = new URL("/login", request.url);
+    const loginUrl = new URL(
+      `/login?returnUrl=${request.nextUrl.pathname}&msg=You need to login to access this page`,
+      request.url
+    );
     return NextResponse.redirect(loginUrl);
   }
 
@@ -31,8 +35,8 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// This tells Next.js which paths the middleware should run on.
-// We exclude static files, images, etc., to keep performance high.
+// which paths the middleware should run on.
+// exclude static files, images, etc., to keep performance high.
 export const config = {
   matcher: [
     /*
