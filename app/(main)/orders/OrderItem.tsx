@@ -1,8 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { OrderItemType } from "@/types/order";
+import { OrderItemDataWithSkuandProductOption } from "@/types/order";
 import { ImageIcon } from "lucide-react";
 
-export function OrderItem({ item }: { item: OrderItemType }) {
+export function OrderItem({
+  item,
+}: {
+  item: OrderItemDataWithSkuandProductOption;
+}) {
   return (
     <Card className="overflow-hidden p-0">
       <CardContent className="p-4">
@@ -27,7 +31,7 @@ export function OrderItem({ item }: { item: OrderItemType }) {
               </div>
 
               {/* variants */}
-              {/* <div className="mt-2 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
+              <div className="mt-2 text-sm text-gray-600 flex flex-wrap gap-x-4 gap-y-1">
                 {item.sku.skuOptionValues.map((obj) => {
                   const optionName = obj.productOption.name;
                   const optionValue = obj.value;
@@ -47,7 +51,7 @@ export function OrderItem({ item }: { item: OrderItemType }) {
                     </div>
                   );
                 })}
-              </div> */}
+              </div>
             </div>
 
             <div className="flex items-end justify-between mt-4">

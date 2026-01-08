@@ -19,7 +19,6 @@ export default function PlaceOrderButton({
       await createOrder(orderItems);
     });
   };
-  console.log(orderItems);
   return (
     <Button
       className="w-full mt-4 cursor-pointer"

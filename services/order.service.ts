@@ -1,10 +1,12 @@
 import { fetcher } from "@/lib/utils";
-import { Order, OrderItemType } from "@/types/order";
+import { Order, OrderItemDataWithSkuandProductOption } from "@/types/order";
 import { cookies } from "next/headers";
 
-export async function getOrders(): Promise<
-  (Order & { orderItems: OrderItemType[] })[]
-> {
+type OrderData = Order & {
+  orderItems: OrderItemDataWithSkuandProductOption[];
+};
+
+export async function getOrders(): Promise<OrderData[]> {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   if (!accessToken) {

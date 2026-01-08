@@ -1,3 +1,5 @@
+import { ProductOptions, ProductOptionValue, ProductSku } from "./product";
+
 export type Order = {
   id: number;
   userId: number;
@@ -15,4 +17,12 @@ export type OrderItemType = {
   skuCodeSnapshot: string;
   priceSnapshot: string;
   quantity: number;
+};
+
+export type OrderItemDataWithSkuandProductOption = OrderItemType & {
+  sku: ProductSku & {
+    skuOptionValues: (ProductOptionValue & {
+      productOption: ProductOptions;
+    })[];
+  };
 };
