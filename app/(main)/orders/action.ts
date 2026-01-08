@@ -3,12 +3,10 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function createOrder(
-  payload: [
-    {
-      skuId: number;
-      quantity: number;
-    }
-  ]
+  payload: {
+    skuId: number;
+    quantity: number;
+  }[]
 ) {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
@@ -21,12 +19,12 @@ export async function createOrder(
       "Content-Type": "application/json",
       Authorization: accessToken,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ items: payload }),
   });
 
   const response = await res.json();
   if (!res.ok) {
     return response;
   }
-  redirect("/orders");
+  redirect("/orders?msg=Order placed successfully!");
 }

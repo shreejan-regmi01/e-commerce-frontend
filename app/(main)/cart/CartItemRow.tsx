@@ -141,11 +141,11 @@ export function CartItemRow({ item }: { item: CartItem }) {
                 <p className="font-bold text-lg">
                   Rs. {(parseInt(item.sku.price) * quantity).toLocaleString()}
                 </p>
-                {quantity > 1 && (
-                  <p className="text-xs text-gray-500">
-                    {quantity} x Rs. {parseInt(item.sku.price).toLocaleString()}
-                  </p>
-                )}
+                {/* {quantity > 1 && ( */}
+                <p className="text-xs text-gray-500">
+                  {quantity} x Rs. {parseInt(item.sku.price).toLocaleString()}
+                </p>
+                {/* )} */}
               </div>
             </div>
           </div>

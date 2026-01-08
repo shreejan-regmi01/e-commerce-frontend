@@ -1,6 +1,6 @@
 # TODO
 
-- [ ] if user is logged out, redirect to login with returnUrl when adding to cart (update protected routes in middleware)
+- [ ] in orders, should show variant of products
 - [ ] make product list items smaller
 - [ ] register user function
 - [ ] logged in route

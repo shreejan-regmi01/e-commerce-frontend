@@ -5,6 +5,7 @@ import { getCartItems } from "@/services/cart.service";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { CartItemRow } from "./CartItemRow";
+import PlaceOrderButton from "./PlaceOrderButton";
 
 export default async function CartPage() {
   const { cartItems, totalPriceOfCart } = await getCartItems();
@@ -54,9 +55,12 @@ export default async function CartPage() {
                 <span>Total</span>
                 <span>Rs. {totalPriceOfCart.toLocaleString()}</span>
               </div>
-              <Button className="w-full mt-4 cursor-pointer" size="lg">
-                Place Order
-              </Button>
+              <PlaceOrderButton
+                orderItems={cartItems.map((item) => ({
+                  skuId: item.skuId,
+                  quantity: item.quantity,
+                }))}
+              />
             </CardContent>
           </Card>
         </div>
