@@ -8,3 +8,9 @@ export type User = {
   createdAt: string;
   updatedAt: string;
 };
+
+export const USER_TYPE = {
+  CUSTOMER: "customer",
+  SELLER: "seller",
+  ADMIN: "admin",
+};
