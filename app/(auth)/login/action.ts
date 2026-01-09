@@ -4,6 +4,7 @@ import { parseCookieString } from "@/lib/parseCookieString";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { decodeJwt } from "jose";
 
 const loginSchema = z.object({
   email: z.email({ message: "Invalid email address" }).trim(),
@@ -39,7 +40,8 @@ export async function login(
 
   // store auth token in cookie
   const cookiesStore = await cookies();
-  cookiesStore.set("accessToken", data.data.token, {
+  const accessToken = data.data.token;
+  cookiesStore.set("accessToken", accessToken, {
     httpOnly: true,
     path: "/",
     maxAge: 60 * 60, //1hr
@@ -66,6 +68,9 @@ export async function login(
     });
   }
 
+  if (decodeJwt(accessToken).role === "admin") {
+    redirect("/admin");
+  }
   // redirect to homepage
   const destination = returnUrl.startsWith("/") ? returnUrl : "/";
   redirect(destination);
