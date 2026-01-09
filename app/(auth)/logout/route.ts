@@ -6,5 +6,5 @@ export async function GET() {
   (await cookies()).delete("accessToken");
   (await cookies()).delete("refreshToken");
   revalidatePath("/");
-  redirect("/");
+  redirect("/login");
 }
