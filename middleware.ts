@@ -1,19 +1,23 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decodeJwt } from "jose";
+import { USER_TYPE } from "./types/user";
 
-const protectedRoutes = ["/cart", "/profile"];
+const protectedRoutes = ["/cart", "/profile", "/orders"];
 const authRoutes = ["/login", "/register"];
 const adminRoutes = ["/admin"];
+const sellerRoutes = ["/seller"];
 
 export async function middleware(request: NextRequest) {
   // get the token from cookies
   // console.log(request);
   let isAdmin;
+  let isSeller;
   const token = request.cookies.get("accessToken")?.value;
 
   if (token) {
-    isAdmin = decodeJwt(token).role === "admin";
+    isAdmin = decodeJwt(token).role === USER_TYPE.ADMIN;
+    isSeller = decodeJwt(token).role === USER_TYPE.SELLER;
   }
 
   // check where the user is trying to go
@@ -24,6 +28,9 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   );
   const isAdminRoute = adminRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route)
+  );
+  const isSellerRoute = sellerRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
@@ -42,9 +49,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // prevent customer from accessing seller routes
+  if (isSellerRoute && (!token || !isSeller)) {
+    const loginUrl = new URL(`/login?msg=Access denied`, request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
   // redirect / to /admin if user is admin
   if (request.nextUrl.pathname == "/" && isAdmin) {
     return NextResponse.redirect(new URL("/admin", request.url));
+  }
+
+  // redirect / to /seller if user is seller
+  if (request.nextUrl.pathname == "/" && isSeller) {
+    return NextResponse.redirect(new URL("/seller", request.url));
   }
 
   // user tries to access login/register while already logged in

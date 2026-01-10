@@ -1,17 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FolderPlus, UserPlus, LogOut } from "lucide-react";
-export default function AdminLayout({
+import { LogOut, Plus } from "lucide-react";
+export default function SellerLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <>
-      <header className="py-4 px-12 bg-blue-800 shadow-lg">
-        <h1 className="text-3xl font-semibold text-white">Admin Portal</h1>
+      <header className="py-4 px-12 bg-green-800 shadow-lg">
+        <h1 className="text-3xl font-semibold text-white">Seller Portal</h1>
       </header>
-      {/* <main className="px-12">{children}</main> */}
       <div className="flex flex-1">
         {/* Sidebar */}
         <aside className="w-64 bg-white border-r hidden md:block shadow-sm h-[calc(100vh-70px)]">
@@ -29,19 +28,8 @@ export default function AdminLayout({
                 asChild
               >
                 <Link href="/admin/category/add">
-                  <FolderPlus className="mr-2 h-4 w-4" />
-                  Add Category
-                </Link>
-              </Button>
-
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-gray-600 hover:text-blue-700 hover:bg-blue-50"
-                asChild
-              >
-                <Link href="/admin/users/add">
-                  <UserPlus className="mr-2 h-4 w-4" />
-                  Add Admin User
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Product
                 </Link>
               </Button>
             </nav>
