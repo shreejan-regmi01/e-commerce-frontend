@@ -1,3 +1,3 @@
 export default async function AdminHomePage() {
-  return <div>Admin</div>;
+  return <h1 className="text-3xl font-semibold">Admin Homepage</h1>;
 }

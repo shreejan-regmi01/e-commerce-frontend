@@ -2,9 +2,7 @@ import { fetcher } from "@/lib/utils";
 import { Category } from "@/types/category";
 
 export async function getCategories(): Promise<Category[]> {
-  return fetcher("/category", {
-    next: { tags: ["categories"] }, // Revalidate on category tag invalidation
-  });
+  return fetcher("/category");
 }
 
 export async function getProductsByCategorySlug(slug: string) {
