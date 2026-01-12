@@ -111,7 +111,7 @@ export default function AddCategoryForm({
   };
   return (
     <Card className="max-w-2xl mt-10">
-      <div>{JSON.stringify(variantOptions)}</div>
+      {/* <div>{JSON.stringify(variantOptions)}</div> */}
       <CardContent>
         <form action={formActionHandler}>
           <input type="hidden" name="slug" value={slug} />
