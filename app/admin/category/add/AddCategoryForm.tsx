@@ -9,25 +9,11 @@ import {
   FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { useActionState, useEffect, useState } from "react";
 import { createCategory } from "./action";
 import { Category } from "@/types/category";
 import { toast } from "sonner";
-import { Check, ChevronsUpDown } from "lucide-react";
+import CustomSelect from "@/components/CustomSelect";
 
 export default function AddCategoryForm({
   existingCategories,
@@ -90,73 +76,13 @@ export default function AddCategoryForm({
               <FieldLabel>Parent Category</FieldLabel>
               {/* hidden input */}
               <input type="hidden" name="parentId" value={selectedParentId} />
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className={cn(
-                      "w-full justify-between font-normal",
-                      !selectedParentId && "text-muted-foreground"
-                    )}
-                  >
-                    {selectedParentId
-                      ? existingCategories.find(
-                          (c) => c.id.toString() === selectedParentId
-                        )?.name
-                      : "Select parent category (Optional)"}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[400px] p-0" align="start">
-                  <Command>
-                    <CommandInput placeholder="Search parent category..." />
-                    <CommandList>
-                      <CommandEmpty>No category found.</CommandEmpty>
-                      <CommandGroup>
-                        <CommandItem
-                          value="none"
-                          onSelect={() => {
-                            setSelectedParentId("");
-                            setOpen(false);
-                          }}
-                        >
-                          <Check
-                            className={cn(
-                              "mr-2 h-4 w-4",
-                              selectedParentId === ""
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                          No Parent (Root Category)
-                        </CommandItem>
-                        {existingCategories.map((category) => (
-                          <CommandItem
-                            key={category.id}
-                            value={category.name}
-                            onSelect={() => {
-                              setSelectedParentId(category.id.toString());
-                              setOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                selectedParentId === category.id.toString()
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {category.name}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+              <CustomSelect
+                open={open}
+                setOpen={setOpen}
+                selectedOptionValue={selectedParentId}
+                setSelectedOptionValue={setSelectedParentId}
+                existingOptions={existingCategories}
+              />
               <FieldDescription>
                 Select a parent if this is a sub-category.
               </FieldDescription>
