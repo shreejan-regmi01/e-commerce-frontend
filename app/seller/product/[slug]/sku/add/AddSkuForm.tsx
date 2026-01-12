@@ -62,7 +62,7 @@ export default function AddSkuForm({ product }: { product: Product }) {
     <Card className="max-w-2xl mt-10">
       <CardHeader>
         <CardTitle>Add New SKU</CardTitle>
-        <div>{JSON.stringify(selections)}</div>
+        {/* <div>{JSON.stringify(selections)}</div> */}
       </CardHeader>
       <CardContent>
         {state?.message && !state.success && (

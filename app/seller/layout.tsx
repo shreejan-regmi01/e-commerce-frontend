@@ -32,6 +32,16 @@ export default function SellerLayout({
                   Add Product
                 </Link>
               </Button>
+              <Button
+                variant="ghost"
+                className="w-full justify-start text-gray-600 hover:text-blue-700 hover:bg-blue-50"
+                asChild
+              >
+                <Link href="/seller/products">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Sku
+                </Link>
+              </Button>
             </nav>
 
             <div className="px-3 mt-6 mb-2">
