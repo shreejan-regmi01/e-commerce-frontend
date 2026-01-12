@@ -82,6 +82,7 @@ export default function AddCategoryForm({
                 selectedOptionValue={selectedParentId}
                 setSelectedOptionValue={setSelectedParentId}
                 existingOptions={existingCategories}
+                placeholder="Select parent category (optional)"
               />
               <FieldDescription>
                 Select a parent if this is a sub-category.

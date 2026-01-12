@@ -21,12 +21,14 @@ export default function CustomSelect({
   selectedOptionValue,
   setSelectedOptionValue,
   existingOptions,
+  placeholder,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
   selectedOptionValue: string;
   setSelectedOptionValue: (selectedOptionValue: string) => void;
   existingOptions: any[];
+  placeholder: string;
 }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -44,7 +46,7 @@ export default function CustomSelect({
             ? existingOptions.find(
                 (c) => c.id.toString() === selectedOptionValue
               )?.name
-            : "Select (Optional)"}
+            : placeholder}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
