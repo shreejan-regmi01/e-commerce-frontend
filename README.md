@@ -1,5 +1,7 @@
 # TODO
 
+- [ ] Known bug: product added to top level parent does not appear in product list
+- [ ] Known bug: the sidebar is not of full height in admin and seller portal
 - [ ] in orders, should show variant of products
 - [ ] make product list items smaller
 - [ ] register user function

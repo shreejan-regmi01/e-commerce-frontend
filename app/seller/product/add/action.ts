@@ -10,18 +10,15 @@ const addProductSchema = z.object({
   description: z.string(),
   brand: z.string(),
   categoryId: z.string(),
-  productOptions: z.array(
-    z.object({
-      name: z.string(),
-      values: z.array(z.string()),
-    })
-  ),
+  productOptions: z.string().transform((str) => {
+    const parsed = JSON.parse(str);
+    return parsed as string[];
+  }),
 });
 export async function createProduct(
   prevState: { error?: string } | undefined,
   formData: FormData
 ) {
-  console.log(Object.fromEntries(formData));
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   if (!accessToken) {

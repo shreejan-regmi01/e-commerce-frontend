@@ -104,11 +104,11 @@ export function TagInput({
           type="button"
           variant="outline"
           size="sm"
-          className="h-8 border-dashed"
+          className="h-8 border-dashed cursor-pointer"
           onClick={() => setIsInputActive(true)}
         >
           <Plus className="mr-2 h-3 w-3" />
-          New Tag
+          Add
         </Button>
       )}
     </div>
