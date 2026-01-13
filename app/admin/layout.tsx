@@ -39,7 +39,7 @@ export default function AdminLayout({
                 className="w-full justify-start text-gray-600 hover:text-blue-700 hover:bg-blue-50"
                 asChild
               >
-                <Link href="/admin/users/add">
+                <Link href="/admin/user/add">
                   <UserPlus className="mr-2 h-4 w-4" />
                   Add Admin User
                 </Link>
@@ -65,7 +65,7 @@ export default function AdminLayout({
             </nav>
           </div>
         </aside>
-        <main className="flex-1 p-8 overflow-auto ">
+        <main className="flex-1 p-8 overflow-auto">
           <div className="max-w-6xl mx-auto ">{children}</div>
         </main>
       </div>

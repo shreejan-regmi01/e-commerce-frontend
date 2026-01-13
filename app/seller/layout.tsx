@@ -63,7 +63,8 @@ export default function SellerLayout({
             </nav>
           </div>
         </aside>
-        <main className="flex-1 p-8 overflow-auto ">
+        {/* <main className="flex-1 p-8 overflow-auto "> */}
+        <main className="flex-1 p-8 overflow-y-scroll max-h-[calc(100vh-70px)]">
           <div className="max-w-6xl mx-auto ">{children}</div>
         </main>
       </div>
