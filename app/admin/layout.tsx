@@ -57,7 +57,7 @@ export default function AdminLayout({
                 className="w-full justify-start text-gray-600 hover:text-blue-700 hover:bg-blue-50"
                 asChild
               >
-                <Link href="/logout" className="text-red-500">
+                <Link href="/logout" className="text-red-500" prefetch={false}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Logout
                 </Link>
