@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import z from "zod";
 
 const addToCartSchema = z.object({
@@ -27,7 +28,8 @@ export async function addToCart({
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   if (!accessToken) {
-    throw new Error("User is not logged in!");
+    redirect("/login?msg=Please login to add to cart");
+    // throw new Error("User is not logged in!");
   }
   //login api
   const res = await fetch(`${process.env.API_BASE_URL}/cart/item`, {

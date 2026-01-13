@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 import z from "zod";
 
@@ -58,8 +59,9 @@ export async function createProduct(
   }
 
   revalidatePath("/seller/product/add");
-  return {
-    success: true,
-    timestamp: Date.now(),
-  };
+  redirect(`/seller/product/${slug}/sku/add`);
+  // return {
+  //   success: true,
+  //   timestamp: Date.now(),
+  // };
 }
