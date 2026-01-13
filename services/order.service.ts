@@ -17,5 +17,6 @@ export async function getOrders(): Promise<OrderData[]> {
     headers: {
       Authorization: accessToken,
     },
+    cache: "no-store",
   });
 }

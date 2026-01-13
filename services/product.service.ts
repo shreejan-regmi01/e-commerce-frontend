@@ -10,5 +10,5 @@ export async function getProducts({
 }: {
   query: string;
 }): Promise<Product[]> {
-  return fetcher(`/product${query}`);
+  return fetcher(`/product${query}`, { cache: "no-store" });
 }

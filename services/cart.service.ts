@@ -16,5 +16,6 @@ export async function getCartItems(): Promise<{
     headers: {
       Authorization: accessToken,
     },
+    cache: "no-store",
   });
 }

@@ -14,8 +14,6 @@ export async function getOwnUserData(): Promise<User> {
       "Content-Type": "application/json",
       Authorization: accessToken,
     },
-    // next: {
-    //   tags: ["loggedInUser"],
-    // },
+    cache: "no-store",
   });
 }
